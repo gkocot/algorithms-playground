@@ -1,46 +1,47 @@
 #include <stdio.h>
+#include <string.h>
 
-typedef unsigned __int128 uint128_t;
+#define NOT_FOUND (-1)
 
-int lengthOfSubstring(char * s) {
-    uint128_t unique_characters = 0;
+int lengthOfLongestSubstring(char * s) {
+    int substring_len_max = 0;
     int substring_len = 0;
-    
-    while (*s) {
-        uint128_t character_bit = ((uint128_t)1 << *s);
-        if ((unique_characters & character_bit) == 0) {
-            unique_characters |= character_bit;
-            substring_len++;            
+    int start = 0;
+    int end = 0;
+    int char_map[128];
+
+    memset(char_map, NOT_FOUND, sizeof(char_map));
+
+    while (s[end]) {
+        if (char_map[(int)s[end]] == NOT_FOUND) {
+            substring_len++;
         }
         else {
-            break;
+            // remember length of the longest substring
+            if (substring_len_max < substring_len) {
+                substring_len_max = substring_len;
+            }
+            // slide the window start index until we find the repeating character
+            while ((start != end) && (s[start] != s[end])) {
+                char_map[(int)s[start++]] = NOT_FOUND;
+            }
+            char_map[(int)s[start++]] = NOT_FOUND;
+            substring_len = end - start + 1;
         }
-        s++;
+        char_map[(int)s[end]] = end;
+        end++;
     }
 
-    return substring_len;
-}
-
-int lengthOfLongestSubstring(char * s){
-    uint128_t unique_characters = 0;  
-    int substring_len = 0;
-    int substring_len_max = 0;
-    int string_len = strlen(s);
-    int i = 0;
-    
-    while (s[i] && (substring_len_max < (string_len - i))) {
-        substring_len = lengthOfSubstring(&s[i]);
-        if (substring_len > substring_len_max) {
-            substring_len_max = substring_len;
-        }
-        i++;
-    }
+    if (substring_len_max < substring_len) {
+        substring_len_max = substring_len;
+    }   
 
     return substring_len_max;
 }
 
 int main() {
-    printf("%d\n", lengthOfLongestSubstring("abcad"));
-    printf("%d\n", lengthOfLongestSubstring("abcadef"));
+    printf("%d\n", lengthOfLongestSubstring("abcabcbb"));
+    printf("%d\n", lengthOfLongestSubstring("abba"));
+    printf("%d\n", lengthOfLongestSubstring("nfpdmpi"));
     return 0;
 }
