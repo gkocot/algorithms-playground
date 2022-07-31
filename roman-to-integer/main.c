@@ -1,61 +1,49 @@
 #include <stdio.h>
 
+int roman_value(char c) {
+switch (c) {
+        case 'I':
+            return 1;
+        case 'V':
+            return 5;
+        case 'X':
+            return 10;
+        case 'L':
+            return 50;
+        case 'C':
+            return 100;
+        case 'D':
+            return 500;
+        case 'M':
+            return 1000;
+        default:
+            return 0;
+    }
+}
+
 int roman_to_int(char const * const roman) {
     int i = 0;
-    int prev = 1001;
     int result = 0;
 
-    while (roman[i]) {
-        switch (roman[i]) {
-            case 'M':
-                result += 1000;
-                if (prev < 1000) {
-                    result -= (2 * prev);
-                }
-                prev = 1000;
-                break;
-            case 'D':
-                result += 500;
-                if (prev < 500) {
-                    result -= (2 * prev);
-                }
-                prev = 500;
-                break;
-            case 'C':
-                result += 100;
-                if (prev < 100) {
-                    result -= (2 * prev);
-                }
-                prev = 100;
-                break;
-            case 'L':
-                result += 50;
-                if (prev < 50) {
-                    result -= (2 * prev);
-                }
-                prev = 50;
-                break;
-            case 'X':
-                result += 10;
-                if (prev < 10) {
-                    result -= (2 * prev);
-                }
-                prev = 10;
-                break;
-            case 'V':
-                result += 5;
-                if (prev < 5) {
-                    result -= (2 * prev);
-                }
-                prev = 5;
-                break;
-            case 'I':
-                result += 1;
-                prev = 1;
-                break;
+    int cur = roman_value(roman[i]);
+    int next = roman_value(roman[i+1]);
+
+    do {
+        if (cur >= next) {
+            result += cur;
+        }
+        else {
+            result -= cur;
         }
         i++;
-    }
+        cur = next;
+        if (roman[i]) {
+            next = roman_value(roman[i+1]);
+        }
+        else {
+            break;
+        }
+    } while (1);
     return result;
 }
 
