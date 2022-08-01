@@ -2,6 +2,15 @@
 #include <stdio.h>
 #include <string.h>
 
+int palindromeLength(char * s, int left, int right) {
+    while ((left >= 0) && (s[right] != 0) && (s[left] == s[right])) {
+        left--;
+        right++;
+    }
+
+    return right - left - 1;
+}
+
 // TBD Understand and use Manacher's Algorithm O(n)
 char * longestPalindrome(char * s){
     int n = strlen(s);
@@ -25,15 +34,6 @@ char * longestPalindrome(char * s){
     memset(result, 0, len_max + 1);
     strncpy(result, &s[start], len_max);
     return result;
-}
-
-int palindromeLength(char * s, int left, int right) {
-    while ((left >= 0) && (s[right] != 0) && (s[left] == s[right])) {
-        left--;
-        right++;
-    }
-
-    return right - left - 1;
 }
 
 int main() {
